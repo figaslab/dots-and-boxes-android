@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reversi</string>
+    <string name="your_turn">Your Turn</string>
+    <string name="opponent_turn">Opponent\'s Turn</string>
+    <string name="game_over">Game Over</string>
+    <string name="you_win">You Win!</string>
+    <string name="you_lose">You Lose</string>
+    <string name="draw">Draw</string>
+    <string name="resign">Resign</string>
+    <string name="resign_confirm">Are you sure you want to resign?</string>
+    <string name="leave_confirm">Are you sure you want to leave?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
+    <string name="rematch">Rematch</string>
+    <string name="back_to_menu">Back to Menu</string>
+    <string name="waiting_opponent">Waiting for opponent…</string>
+    <string name="no_valid_moves">No valid moves - passing turn</string>
+    <string name="opponent_passed">Opponent passed</string>
+    <string name="score_format">%1$d - %2$d</string>
+    <string name="send">Send</string>
+    <string name="type_message">Type a message…</string>
+    <string name="wants_to_play_reversi">wants to play Reversi</string>
+    <string name="assign_black">Black</string>
+    <string name="assign_white">White</string>
+    <string name="opponent_resigned">Opponent resigned</string>
+    <string name="opponent_left">Opponent left the game</string>
+    <string name="timeout_loss">Time expired</string>
+    <string name="waiting_rematch">Waiting for opponent\'s response…</string>
+    <string name="opponent_declined_rematch">Opponent declined rematch</string>
+    <string name="connection_lost">Connection lost</string>
+</resources>

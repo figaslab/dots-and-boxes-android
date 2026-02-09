@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Reversi Board Colors (classic green theme) -->
+    <color name="board_light">#2E7D32</color>
+    <color name="board_dark">#1B5E20</color>
+
+    <!-- Highlight Colors -->
+    <color name="highlight_selected">#80FFFF00</color>
+    <color name="highlight_valid_move">#8000FF00</color>
+    <color name="highlight_last_move">#80FFA500</color>
+    <color name="highlight_check">#80FF0000</color>
+
+    <!-- App Theme Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="background">#0D2818</color>
+    <color name="card_background">#1A3A2A</color>
+    <color name="text_light">#E8F5E9</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="bubble_received">#E8F5E9</color>
+    <color name="accent">#4CAF50</color>
+    <color name="primary">#1A3A2A</color>
+    <color name="primary_dark">#0D2818</color>
+
+    <!-- Timer Colors -->
+    <color name="timer_normal">#404040</color>
+    <color name="timer_warning">#FF9800</color>
+    <color name="timer_critical">#F44336</color>
+    <color name="timer_inactive">#808080</color>
+
+    <!-- Score Colors -->
+    <color name="score_black">#212121</color>
+    <color name="score_white">#FAFAFA</color>
+    <color name="text_gold">#4CAF50</color>
+    <color name="gradient_start">#1A3A2A</color>
+</resources>

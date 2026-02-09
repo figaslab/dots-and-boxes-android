@@ -1,0 +1,12 @@
+[submodule "gridgame"]
+	path = gridgame
+	url = https://github.com/figaslab/gridgame-android.git
+[submodule "mockpvp"]
+	path = mockpvp
+	url = https://github.com/figaslab/mockpvp-android.git
+[submodule "p2pkit"]
+	path = p2pkit
+	url = https://github.com/figaslab/p2pkit-android.git
+[submodule "uikit"]
+	path = uikit
+	url = https://github.com/figaslab/uikit-android.git
