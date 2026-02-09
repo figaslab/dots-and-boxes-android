@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Reversi Board Colors (classic green theme) -->
-    <color name="board_light">#2E7D32</color>
-    <color name="board_dark">#1B5E20</color>
+    <!-- Board Colors (dark theme) -->
+    <color name="board_light">#1E1E32</color>
+    <color name="board_dark">#14142A</color>
 
     <!-- Highlight Colors -->
     <color name="highlight_selected">#80FFFF00</color>
@@ -13,15 +13,19 @@
     <!-- App Theme Colors -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="background">#0D2818</color>
-    <color name="card_background">#1A3A2A</color>
-    <color name="text_light">#E8F5E9</color>
+    <color name="background">#0D1025</color>
+    <color name="card_background">#1A1D3A</color>
+    <color name="text_light">#E8EAF6</color>
     <color name="text_primary">#212121</color>
     <color name="text_secondary">#757575</color>
-    <color name="bubble_received">#E8F5E9</color>
-    <color name="accent">#4CAF50</color>
-    <color name="primary">#1A3A2A</color>
-    <color name="primary_dark">#0D2818</color>
+    <color name="bubble_received">#E8EAF6</color>
+    <color name="accent">#5C6BC0</color>
+    <color name="primary">#1A1D3A</color>
+    <color name="primary_dark">#0D1025</color>
+
+    <!-- Player Colors -->
+    <color name="player_red">#F44336</color>
+    <color name="player_blue">#2196F3</color>
 
     <!-- Timer Colors -->
     <color name="timer_normal">#404040</color>
@@ -30,8 +34,8 @@
     <color name="timer_inactive">#808080</color>
 
     <!-- Score Colors -->
-    <color name="score_black">#212121</color>
-    <color name="score_white">#FAFAFA</color>
-    <color name="text_gold">#4CAF50</color>
-    <color name="gradient_start">#1A3A2A</color>
+    <color name="score_red">#F44336</color>
+    <color name="score_blue">#2196F3</color>
+    <color name="text_gold">#5C6BC0</color>
+    <color name="gradient_start">#1A1D3A</color>
 </resources>

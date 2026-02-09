@@ -1,6 +1,6 @@
-package com.devfigas.reversi.game.state
+package com.devfigas.dotsandboxes.game.state
 
-enum class ReversiGamePhase {
+enum class DotsAndBoxesGamePhase {
     WAITING_CHALLENGE,
     CHALLENGE_RECEIVED,
     PLAYING,

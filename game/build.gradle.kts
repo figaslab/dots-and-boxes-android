@@ -7,21 +7,21 @@ plugins {
 }
 
 android {
-    namespace = "com.devfigas.reversi"
+    namespace = "com.devfigas.dotsandboxes"
     compileSdk = 35
     buildFeatures {
         buildConfig = true
     }
     defaultConfig {
-        applicationId = "com.devfigas.reversi"
+        applicationId = "com.devfigas.dotsandboxes"
         minSdk = 23
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
-        testApplicationId = "com.devfigas.reversi.test"
+        testApplicationId = "com.devfigas.dotsandboxes.test"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "defaultAvatar", "\"⚫\"")
+        buildConfigField("String", "defaultAvatar", "\"🔴\"")
     }
 
     signingConfigs {

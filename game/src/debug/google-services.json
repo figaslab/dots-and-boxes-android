@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:884862990188:android:6b21904b8a255ffc192549",
         "android_client_info": {
-          "package_name": "com.devfigas.reversi"
+          "package_name": "com.devfigas.dotsandboxes"
         }
       },
       "oauth_client": [],
@@ -28,7 +28,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:884862990188:android:49b94e10ad3d2cb7192549",
         "android_client_info": {
-          "package_name": "com.devfigas.reversi.debug"
+          "package_name": "com.devfigas.dotsandboxes.debug"
         }
       },
       "oauth_client": [],

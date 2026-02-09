@@ -1,4 +1,4 @@
-package com.devfigas.reversi
+package com.devfigas.dotsandboxes
 
 import android.app.ActivityManager
 import android.app.Application
@@ -11,7 +11,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         if (!isMainProcess()) return
-        PvpGameFactoryRegistry.register(ReversiGameFactory())
+        PvpGameFactoryRegistry.register(DotsAndBoxesGameFactory())
         P2PKit.init(this)
         AnalyticsManager.initialize(this)
     }

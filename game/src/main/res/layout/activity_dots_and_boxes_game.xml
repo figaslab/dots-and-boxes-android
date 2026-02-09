@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".ReversiGameActivity">
+    tools:context=".DotsAndBoxesGameActivity">
 
 <LinearLayout
     android:layout_width="match_parent"
@@ -91,14 +91,6 @@
         android:paddingTop="12dp"
         android:paddingBottom="12dp">
 
-        <View
-            android:id="@+id/status_disc_indicator"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/disc_black_small"
-            android:visibility="gone" />
-
         <TextView
             android:id="@+id/tv_game_status"
             android:layout_width="0dp"
@@ -119,22 +111,22 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <!-- Black disc indicator -->
+            <!-- Red indicator -->
             <View
-                android:id="@+id/black_disc_indicator"
+                android:id="@+id/red_color_indicator"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:background="@drawable/disc_black_small" />
+                android:background="@drawable/dot_red" />
 
             <TextView
-                android:id="@+id/tv_black_score"
+                android:id="@+id/tv_red_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                tools:text="2" />
+                tools:text="0" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -146,27 +138,27 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv_white_score"
+                android:id="@+id/tv_blue_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                tools:text="2" />
+                tools:text="0" />
 
-            <!-- White disc indicator -->
+            <!-- Blue indicator -->
             <View
-                android:id="@+id/white_disc_indicator"
+                android:id="@+id/blue_color_indicator"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginStart="4dp"
-                android:background="@drawable/disc_white_small" />
+                android:background="@drawable/dot_blue" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <!-- Reversi Board Section -->
+    <!-- Board Section -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -206,9 +198,9 @@
 
             </LinearLayout>
 
-            <!-- Reversi Board -->
-            <com.devfigas.reversi.ui.ReversiBoardView
-                android:id="@+id/reversi_board_view"
+            <!-- Dots and Boxes Board -->
+            <com.devfigas.dotsandboxes.ui.DotsAndBoxesBoardView
+                android:id="@+id/dots_and_boxes_board_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"

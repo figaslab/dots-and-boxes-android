@@ -14,7 +14,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "reversi"
+rootProject.name = "dots-and-boxes"
 include(":game")
 include(":p2pkit")
 include(":uikit")
