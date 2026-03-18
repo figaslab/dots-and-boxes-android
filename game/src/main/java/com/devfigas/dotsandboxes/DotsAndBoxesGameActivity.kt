@@ -86,6 +86,7 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
     private var opponent: User? = null
     private var gameId: String? = null
     private var tournament: Tournament? = null
+    private var isRematch: Boolean = false
 
     // Dialogs
     private var versusDialog: VersusDialog? = null
@@ -229,16 +230,29 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
         val playerLabel = if (myColor == PlayerColor.RED) labels.first else labels.second
         val opponentLabel = if (myColor == PlayerColor.RED) labels.second else labels.first
 
-        versusDialog = VersusDialog(
-            context = this, player = player, opponent = opp,
-            playerSideLabel = playerLabel, opponentSideLabel = opponentLabel,
-            tournament = tournament,
-            onDismissed = {
-                versusDialog = null
-                onComplete()
+        val showDialog = {
+            if (!isFinishing && !isDestroyed) {
+                versusDialog = VersusDialog(
+                    context = this, player = player, opponent = opp,
+                    playerSideLabel = playerLabel, opponentSideLabel = opponentLabel,
+                    tournament = tournament,
+                    onDismissed = {
+                        versusDialog = null
+                        onComplete()
+                    }
+                )
+                versusDialog?.show()
             }
-        )
-        versusDialog?.show()
+        }
+
+        // Show interstitial before VersusDialog in tournament mode (first match only, not rematches)
+        if (gameMode == GameMode.INTERNET && tournament != null && !isRematch) {
+            AdManager.maybeShowInterstitial(this) {
+                showDialog()
+            }
+        } else {
+            showDialog()
+        }
     }
 
     private fun startGame() {
@@ -724,6 +738,7 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
             }
         }
 
+        isRematch = true
         showVersusAnimation { startGame() }
     }
 
