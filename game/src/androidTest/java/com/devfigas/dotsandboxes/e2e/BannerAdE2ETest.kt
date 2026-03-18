@@ -46,6 +46,11 @@ class BannerAdE2ETest {
         device.pressHome()
         Thread.sleep(1000)
 
+        // Clear logcat
+        device.executeShellCommand("logcat -c")
+        Thread.sleep(500)
+
+        // Launch app
         device.executeShellCommand("am start -n $pkg/com.devfigas.mockpvp.activity.MainActivity")
         device.wait(Until.hasObject(By.pkg(pkg).depth(0)), TIMEOUT_MS)
         Thread.sleep(5000)
@@ -79,23 +84,23 @@ class BannerAdE2ETest {
         sideOption?.click()
         Thread.sleep(1000)
 
-        // Wait for versus dialog + ad load
+        // Wait for versus dialog + banner ad to load
         Thread.sleep(15000)
 
         // Verify game screen
         val boardView = device.findObject(By.res("$pkg:id/dots_and_boxes_board_view"))
         assertNotNull("Board view not found - not in game screen", boardView)
 
-        // Check banner
-        val bannerContainer = device.findObject(By.res("$pkg:id/banner_container"))
-        if (bannerContainer != null) {
-            val bounds = bannerContainer.visibleBounds
-            Log.d(TAG, "Banner: height=${bounds.height()}")
-            assertTrue("Banner should have height > 0", bounds.height() > 0)
-        } else {
-            Log.w(TAG, "Banner container GONE - ad may not have loaded in test mode")
-        }
+        // Verify banner loaded via Appodeal logs
+        val logcat = device.executeShellCommand("logcat -d -s AppodealAdProvider:D")
+        Log.d(TAG, "Appodeal logs: $logcat")
 
-        Log.d(TAG, "SUCCESS: Game screen with banner ad integration verified")
+        val bannerLoaded = logcat.contains("Banner loaded")
+        assertTrue(
+            "Banner did NOT load - check Appodeal key config. Logs: ${logcat.take(500)}",
+            bannerLoaded
+        )
+
+        Log.d(TAG, "SUCCESS: Banner ad loaded and verified via logs")
     }
 }
