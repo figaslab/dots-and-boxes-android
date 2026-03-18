@@ -46,11 +46,9 @@ class BannerAdE2ETest {
         device.pressHome()
         Thread.sleep(1000)
 
-        // Clear logcat
         device.executeShellCommand("logcat -c")
         Thread.sleep(500)
 
-        // Launch app
         device.executeShellCommand("am start -n $pkg/com.devfigas.mockpvp.activity.MainActivity")
         device.wait(Until.hasObject(By.pkg(pkg).depth(0)), TIMEOUT_MS)
         Thread.sleep(5000)
@@ -84,23 +82,26 @@ class BannerAdE2ETest {
         sideOption?.click()
         Thread.sleep(1000)
 
-        // Wait for versus dialog + banner ad to load
+        // Wait for versus dialog + ad load
         Thread.sleep(15000)
 
         // Verify game screen
         val boardView = device.findObject(By.res("$pkg:id/dots_and_boxes_board_view"))
         assertNotNull("Board view not found - not in game screen", boardView)
 
-        // Verify banner loaded via Appodeal logs
-        val logcat = device.executeShellCommand("logcat -d -s AppodealAdProvider:D")
+        // Check Appodeal init + banner via logcat
+        val logcat = device.executeShellCommand("logcat -d -s AppodealAdProvider:D AdManager:D")
         Log.d(TAG, "Appodeal logs: $logcat")
 
-        val bannerLoaded = logcat.contains("Banner loaded")
-        assertTrue(
-            "Banner did NOT load - check Appodeal key config. Logs: ${logcat.take(500)}",
-            bannerLoaded
-        )
+        val initFailed = logcat.contains("Appodeal initialized: false") || logcat.contains("init error")
+        assertFalse("Appodeal init FAILED - wrong key? Logs: ${logcat.take(500)}", initFailed)
 
-        Log.d(TAG, "SUCCESS: Banner ad loaded and verified via logs")
+        val initSuccess = logcat.contains("Appodeal initialized: true")
+        assertTrue("Appodeal did not initialize. Logs: ${logcat.take(500)}", initSuccess)
+
+        val bannerLoaded = logcat.contains("Banner loaded")
+        assertTrue("Banner did NOT load. Logs: ${logcat.take(500)}", bannerLoaded)
+
+        Log.d(TAG, "SUCCESS: Appodeal initialized + banner loaded correctly")
     }
 }
