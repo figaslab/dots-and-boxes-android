@@ -1,0 +1,103 @@
+name: Dots and Boxes
+brief: P2P Dots and Boxes Game - Play Dots and Boxes offline via Bluetooth/WiFi!
+description: 🔲 Dots and Boxes
+
+Play Dots and Boxes with people nearby without internet! Connect via Bluetooth or WiFi and enjoy classic Dots and Boxes matches face-to-face. Draw lines, complete boxes, and claim the most territory!
+
+🎯 KEY FEATURES
+
+📡 OFFLINE MULTIPLAYER
+• Bluetooth Mode: Play with anyone nearby, no internet required
+• WiFi Local Mode: Connect on the same WiFi network for faster gameplay
+• Face-to-Face Mode: Share device, perfect for travel or waiting rooms
+• Online Tournaments: Compete globally when you have internet
+
+🎮 GAME MODES
+• Practice Mode: Sharpen your skills against AI
+• Local Multiplayer: Pass the device between players
+• Bluetooth Match: Wireless play within 10 meters
+• WiFi Match: Stable connection on local network
+• Tournament Mode: Win prizes and unlock avatars
+
+🏆 TOURNAMENTS & REWARDS
+• Multiple tournament levels with increasing difficulty
+• Earn coins by winning matches
+• Unlock exclusive box-themed avatars
+• Progress through ranks and challenges
+• Daily rewards for active players
+
+✨ FEATURES
+• Clean, intuitive dot grid design
+• Customizable avatars with unique themes
+• Real-time move synchronization
+• Challenge system with accept/reject
+• In-game chat during matches
+• Smooth line drawing animations
+• Box completion highlighting with player colors
+• Score tracking display
+• Move validation following official Dots and Boxes rules
+• Rematch option after each game
+
+🎨 USER EXPERIENCE
+• Beautiful pixel-art themed interface
+• Smooth animations and responsive controls
+• No ads during gameplay (only rewarded ads for bonuses)
+• Lightweight app, minimal battery drain
+• Works on phones and tablets
+
+🔒 PRIVACY & SAFETY
+• Age-appropriate content for all ages
+• COPPA compliant for children under 13
+• No personal data collection in offline modes
+• Safe, family-friendly environment
+
+📶 WHY OFFLINE MULTIPLAYER?
+
+Perfect for situations where internet isn't available:
+• Flights and travel
+• Remote areas
+• Coffee shops and parks
+• School breaks
+• Family gatherings
+• Saving mobile data
+
+No need to share contact info - just open the app, connect via Bluetooth or WiFi, and start playing!
+
+🎲 HOW TO PLAY
+
+BLUETOOTH MODE:
+1. Both players open the app
+2. Enable Bluetooth on both devices
+3. One player creates a game
+4. Other player joins from nearby games list
+5. Choose colors and start playing!
+
+WIFI MODE:
+1. Connect both devices to same WiFi network
+2. One player hosts a game
+3. Other player joins from WiFi lobby
+4. Instant connection, smooth gameplay!
+
+ONLINE MODE:
+1. Connect to internet
+2. Join tournament lobby
+3. Challenge other players worldwide
+4. Win matches to earn coins and rewards
+
+🔲 DOTS AND BOXES RULES
+
+Classic Dots and Boxes rules on a grid of dots:
+• Players take turns drawing a single horizontal or vertical line between two adjacent dots
+• When a player completes the fourth side of a box, they claim that box and score a point
+• Completing a box earns an extra turn
+• The game ends when all lines have been drawn
+• The player who claimed the most boxes wins
+• Chain strategy: force your opponent to give you multiple boxes in sequence
+• Simple to learn, with surprisingly deep strategic depth
+
+Whether you're a beginner connecting your first dots or a strategic thinker mastering chain sacrifices and double-dealing, this app provides the perfect Dots and Boxes experience both online and offline.
+
+Download now and challenge someone next to you to a Dots and Boxes match! No internet? No problem!
+
+⚠️ DISCLAIMER
+This is a skill-based board game for entertainment purposes only. It is NOT a gambling app and does not involve real-money transactions, betting, or wagering of any kind. All in-game coins, rewards, and prizes are virtual items with no real-world monetary value and cannot be exchanged, transferred, or redeemed for real money or any goods and services outside the app. No purchase is required to play or enjoy the full game experience.

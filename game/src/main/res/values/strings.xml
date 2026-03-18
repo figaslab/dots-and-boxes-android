@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Dots and Boxes</string>
+    <string name="pixel_chess_subtitle">P2P Dots and Boxes Game</string>
     <string name="your_turn">Your Turn</string>
     <string name="opponent_turn">Opponent\'s Turn</string>
     <string name="game_over">Game Over</string>
