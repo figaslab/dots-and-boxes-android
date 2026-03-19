@@ -1,0 +1,79 @@
+name: Dots and Boxes
+brief: Jogo P2P de Dots and Boxes - Jogue offline via Bluetooth/WiFi!
+description: 🔲 Dots and Boxes
+
+Jogue Pontos e Caixas com pessoas próximas sem internet! Conecte-se via Bluetooth ou WiFi e desfrute de partidas clássicas de Pontos e Caixas frente a frente. Desenhe linhas, complete caixas e conquiste o maior território!
+
+🎯 PRINCIPAIS FUNCIONALIDADES
+
+📡 MULTIJOGADOR OFFLINE
+• Modo Bluetooth: Jogue com qualquer pessoa próxima, sem internet
+• Modo WiFi Local: Conecte-se na mesma rede WiFi para jogabilidade mais rápida
+• Modo Frente a Frente: Partilhe o dispositivo, perfeito para viagens ou salas de espera
+• Torneios Online: Compita globalmente quando tiver internet
+
+🎮 MODOS DE JOGO
+• Modo Treino: Aperfeiçoe as suas habilidades contra a IA
+• Multijogador Local: Passe o dispositivo entre jogadores
+• Partida Bluetooth: Jogo sem fios até 10 metros
+• Partida WiFi: Conexão estável na rede local
+• Modo Torneio: Ganhe prémios e desbloqueie avatares
+
+🏆 TORNEIOS E RECOMPENSAS
+• Múltiplos níveis de torneio com dificuldade crescente
+• Ganhe moedas ao vencer partidas
+• Desbloqueie avatares exclusivos com tema de caixas
+• Progrida através de rankings e desafios
+• Recompensas diárias para jogadores ativos
+
+✨ FUNCIONALIDADES
+• Design de grelha de pontos limpo e intuitivo
+• Avatares personalizáveis com temas únicos
+• Sincronização de movimentos em tempo real
+• Sistema de desafio com aceitar/rejeitar
+• Chat durante as partidas
+• Animações suaves de desenho de linhas
+• Destaque de caixas completadas com cores dos jogadores
+• Exibição de pontuação
+• Validação de movimentos seguindo as regras oficiais de Pontos e Caixas
+• Opção de revanche após cada jogo
+
+🎨 EXPERIÊNCIA DO UTILIZADOR
+• Interface bonita com tema pixel-art
+• Animações suaves e controlos responsivos
+• Sem anúncios durante o jogo (apenas anúncios recompensados para bónus)
+• App leve, consumo mínimo de bateria
+• Funciona em telemóveis e tablets
+
+🔒 PRIVACIDADE E SEGURANÇA
+• Conteúdo apropriado para todas as idades
+• Conformidade com COPPA para menores de 13 anos
+• Sem recolha de dados pessoais nos modos offline
+• Ambiente seguro e familiar
+
+📶 PORQUÊ MULTIJOGADOR OFFLINE?
+Ideal para viagens, áreas remotas, escola ou reuniões familiares. Sem necessidade de partilhar contactos - basta abrir a app e conectar via Bluetooth ou WiFi!
+
+🎲 COMO JOGAR
+• Bluetooth: Ativem o Bluetooth, criem/entrem num jogo pela lista próxima
+• WiFi: Conectem à mesma rede, criem/entrem pelo lobby WiFi
+• Online: Entre no lobby do torneio e desafie jogadores mundialmente
+
+
+🔲 REGRAS DE PONTOS E CAIXAS
+
+Regras clássicas de Pontos e Caixas numa grelha de pontos:
+• Os jogadores alternam a desenhar uma única linha horizontal ou vertical entre dois pontos adjacentes
+• Quando um jogador completa o quarto lado de uma caixa, reclama essa caixa e marca um ponto
+• Completar uma caixa dá um turno extra
+• O jogo termina quando todas as linhas foram desenhadas
+• O jogador que reclamou mais caixas vence
+• Estratégia de cadeia: force o adversário a dar-lhe múltiplas caixas em sequência
+• Simples de aprender, com profundidade estratégica surpreendente
+
+Quer seja um principiante ou um pensador estratégico a dominar sacrifícios em cadeia, esta app proporciona a experiência de Pontos e Caixas perfeita tanto online como offline.
+
+Descarregue agora e desafie alguém próximo! Sem internet? Sem problema!
+
+⚠️ AVISO LEGAL
+Este é um jogo de tabuleiro baseado em habilidade apenas para entretenimento. NÃO é uma app de apostas e não envolve transações com dinheiro real, apostas ou jogos de azar de qualquer tipo. Todas as moedas, recompensas e prémios do jogo são itens virtuais sem valor monetário real e não podem ser trocados, transferidos ou resgatados por dinheiro real ou quaisquer bens e serviços fora da app. Nenhuma compra é necessária para jogar ou desfrutar da experiência completa do jogo.
