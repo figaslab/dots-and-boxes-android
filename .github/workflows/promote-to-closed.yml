@@ -8,17 +8,68 @@ jobs:
     name: Promote Internal -> Closed Testing
     runs-on: ubuntu-latest
     steps:
-      - name: Create empty release on closed track
-        uses: r0adkll/upload-google-play@v1.1.3
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
-          packageName: com.devfigas.dotsandboxes
-          track: internal
-          status: completed
-          promoteTrack: alpha
+          python-version: '3.11'
 
+      - name: Install dependencies
+        run: pip install google-auth google-api-python-client
+
+      - name: Promote release
+        env:
+          PLAY_JSON: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+          PACKAGE_NAME: com.devfigas.dotsandboxes
+        run: |
+          python3 << 'PYEOF'
+          import json, os
+          from google.oauth2 import service_account
+          from googleapiclient.discovery import build
+
+          creds_json = json.loads(os.environ['PLAY_JSON'])
+          creds = service_account.Credentials.from_service_account_info(
+              creds_json, scopes=['https://www.googleapis.com/auth/androidpublisher']
+          )
+          service = build('androidpublisher', 'v3', credentials=creds)
+          pkg = os.environ['PACKAGE_NAME']
+
+          # Create edit
+          edit = service.edits().insert(body={}, packageName=pkg).execute()
+          edit_id = edit['id']
+          print(f"Edit ID: {edit_id}")
+
+          # Get internal track releases
+          internal = service.edits().tracks().get(
+              packageName=pkg, editId=edit_id, track='internal'
+          ).execute()
+          print(f"Internal track: {json.dumps(internal, indent=2)}")
+
+          if not internal.get('releases'):
+              print("No releases on internal track!")
+              service.edits().delete(packageName=pkg, editId=edit_id).execute()
+              exit(1)
+
+          # Get the latest release version codes
+          latest = internal['releases'][0]
+          version_codes = latest.get('versionCodes', [])
+          print(f"Promoting version codes: {version_codes}")
+
+          # Set closed testing track with same version codes
+          service.edits().tracks().update(
+              packageName=pkg, editId=edit_id, track='alpha',
+              body={
+                  'track': 'alpha',
+                  'releases': [{
+                      'status': 'completed',
+                      'versionCodes': version_codes
+                  }]
+              }
+          ).execute()
+
+          # Commit
+          service.edits().commit(packageName=pkg, editId=edit_id).execute()
+          print(f"Successfully promoted to closed testing!")
+          PYEOF
 
       - name: Summary
-        run: |
-          echo "Promoted to Closed Testing (alpha track)"
-          echo "Package: com.devfigas.dotsandboxes"
+        run: echo "Promoted to Closed Testing (alpha track)"
