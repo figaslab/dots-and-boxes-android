@@ -1,0 +1,24 @@
+name: Promote to Closed Testing (Dots and Boxes)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  promote:
+    name: Promote Internal -> Closed Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create empty release on closed track
+        uses: r0adkll/upload-google-play@v1.1.3
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+          packageName: com.devfigas.dotsandboxes
+          track: internal
+          status: completed
+          promoteTrack: alpha
+
+
+      - name: Summary
+        run: |
+          echo "Promoted to Closed Testing (alpha track)"
+          echo "Package: com.devfigas.dotsandboxes"
