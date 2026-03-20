@@ -133,6 +133,7 @@ jobs:
               exit 0
             fi
 
+            # Parse failed dependencies - only "Could not find" errors
             NEW_FAILURES=$(grep -oP "Could not find \K[^:]+" /tmp/build_output.txt | sort -u || true)
             if [ -z "$NEW_FAILURES" ]; then
               echo "::error::Build failed for non-dependency reason"
@@ -140,6 +141,7 @@ jobs:
               exit 1
             fi
 
+            # Check if any failure is a core dependency (not excludable)
             CORE_FAIL=0
             for group in $NEW_FAILURES; do
               case "$group" in
@@ -165,15 +167,13 @@ jobs:
           echo "::error::Build failed after $MAX_RETRIES attempts"
           exit 1
 
-
       - name: Ad mediation summary
         if: always()
         run: |
           echo "## Ad Mediation Summary" >> $GITHUB_STEP_SUMMARY
           if [ -n "${EXCLUDE_AD_GROUPS:-}" ]; then
             echo "### Excluded (repository unavailable)" >> $GITHUB_STEP_SUMMARY
-            echo "$EXCLUDE_AD_GROUPS" | tr "," "
-" | while read -r g; do
+            echo "$EXCLUDE_AD_GROUPS" | tr ',' '\n' | while read -r g; do
               echo "- $g" >> $GITHUB_STEP_SUMMARY
             done
             echo "" >> $GITHUB_STEP_SUMMARY
