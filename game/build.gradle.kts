@@ -124,3 +124,19 @@ dependencies {
     implementation("androidx.emoji2:emoji2-views-helper:$emoji2Version")
     implementation("androidx.emoji2:emoji2-emojipicker:$emoji2Version")
 }
+
+// Exclude unavailable ad mediation networks (CI passes -PexcludeAdGroups=group1,group2)
+val excludeAdGroups = (findProperty("excludeAdGroups") as? String)
+    ?.split(",")
+    ?.map { it.trim() }
+    ?.filter { it.isNotEmpty() }
+    ?: emptyList()
+
+if (excludeAdGroups.isNotEmpty()) {
+    println("Excluding unavailable ad mediation groups: $excludeAdGroups")
+    configurations.configureEach {
+        excludeAdGroups.forEach { group ->
+            exclude(group = group)
+        }
+    }
+}

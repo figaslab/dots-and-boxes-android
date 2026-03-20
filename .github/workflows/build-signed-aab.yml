@@ -110,9 +110,77 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           GRADLE_OPTS: -Xmx8g -XX:MaxMetaspaceSize=1024m -XX:+HeapDumpOnOutOfMemoryError
         run: |
-          ./gradlew :game:bundleRelease --stacktrace --max-workers=1
-          echo "Build completed! Checking outputs..."
-          ls -lh game/build/outputs/bundle/release/
+          EXCLUDE=""
+          MAX_RETRIES=3
+
+          for attempt in $(seq 1 $MAX_RETRIES); do
+            echo "=== Build attempt $attempt/$MAX_RETRIES ==="
+            EXTRA_ARGS=""
+            if [ -n "$EXCLUDE" ]; then
+              EXTRA_ARGS="-PexcludeAdGroups=$EXCLUDE"
+              echo "Excluding ad groups: $EXCLUDE"
+            fi
+
+            set +e
+            ./gradlew :game:bundleRelease $EXTRA_ARGS --stacktrace --max-workers=1 2>&1 | tee /tmp/build_output.txt
+            BUILD_EXIT=${PIPESTATUS[0]}
+            set -e
+
+            if [ "$BUILD_EXIT" -eq 0 ]; then
+              echo "Build succeeded!"
+              echo "EXCLUDE_AD_GROUPS=$EXCLUDE" >> $GITHUB_ENV
+              ls -lh game/build/outputs/bundle/release/
+              exit 0
+            fi
+
+            NEW_FAILURES=$(grep -oP "Could not find \K[^:]+" /tmp/build_output.txt | sort -u || true)
+            if [ -z "$NEW_FAILURES" ]; then
+              echo "::error::Build failed for non-dependency reason"
+              cat /tmp/build_output.txt | grep -A5 "FAILED\|error:" | tail -20
+              exit 1
+            fi
+
+            CORE_FAIL=0
+            for group in $NEW_FAILURES; do
+              case "$group" in
+                com.google.*|com.firebase.*|androidx.*|org.jetbrains.*|com.appodeal.ads)
+                  echo "::error::Core dependency unavailable: $group - cannot exclude"
+                  CORE_FAIL=1
+                  ;;
+                *)
+                  echo "::warning::Ad mediation repo unavailable: $group - will exclude and retry"
+                  EXCLUDE="${EXCLUDE:+$EXCLUDE,}$group"
+                  ;;
+              esac
+            done
+
+            if [ "$CORE_FAIL" -eq 1 ]; then
+              exit 1
+            fi
+
+            echo "Cleaning build cache before retry..."
+            ./gradlew clean 2>/dev/null || true
+          done
+
+          echo "::error::Build failed after $MAX_RETRIES attempts"
+          exit 1
+
+
+      - name: Ad mediation summary
+        if: always()
+        run: |
+          echo "## Ad Mediation Summary" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${EXCLUDE_AD_GROUPS:-}" ]; then
+            echo "### Excluded (repository unavailable)" >> $GITHUB_STEP_SUMMARY
+            echo "$EXCLUDE_AD_GROUPS" | tr "," "
+" | while read -r g; do
+              echo "- $g" >> $GITHUB_STEP_SUMMARY
+            done
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "These ad networks were automatically excluded because their Maven repository was unreachable." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "All ad mediation dependencies resolved successfully." >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Verify AAB signature
         run: |
@@ -168,7 +236,6 @@ jobs:
           releaseFiles: ./release/game-release.aab
           track: internal
           status: completed
-          changesNotSentForReview: true
 
       - name: Summary
         run: |
