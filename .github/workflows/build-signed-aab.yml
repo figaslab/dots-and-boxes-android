@@ -196,7 +196,6 @@ jobs:
           releaseFiles: game/build/outputs/bundle/release/game-release.aab
           track: internal
           status: completed
-          changesNotSentForReview: true
 
       - name: Deploy summary
         if: ${{ github.event.inputs.deploy == 'true' }}
