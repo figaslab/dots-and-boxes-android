@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2] - 2026-03-23
+
+### Fixed
+- Fixed runtime crash (NoClassDefFoundError) caused by ad mediation adapters whose SDK dependencies were unavailable
+- Ad mediation exclusion is now dynamic: unavailable SDKs and their adapters are auto-detected and excluded at build time
+- CI/CD exclude mechanism now also removes corresponding adapter modules, preventing runtime ClassNotFoundError
+
 ## [1.0.1] - 2026-03-20
 
 ### Changed

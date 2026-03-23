@@ -67,7 +67,7 @@ jobs:
           ).execute()
 
           # Commit
-          service.edits().commit(packageName=pkg, editId=edit_id).execute()
+          service.edits().commit(packageName=pkg, editId=edit_id, changesNotSentForReview=True).execute()
           print(f"Successfully promoted to closed testing!")
           PYEOF
 

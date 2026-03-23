@@ -125,18 +125,68 @@ dependencies {
     implementation("androidx.emoji2:emoji2-emojipicker:$emoji2Version")
 }
 
-// Exclude unavailable ad mediation networks (CI passes -PexcludeAdGroups=group1,group2)
-val excludeAdGroups = (findProperty("excludeAdGroups") as? String)
+// Core dependency groups that must never be excluded
+val coreDependencyGroups = setOf(
+    "com.google", "com.firebase", "androidx", "org.jetbrains", "com.appodeal.ads"
+)
+
+fun isCoreGroup(group: String) = coreDependencyGroups.any { group.startsWith(it) }
+
+// Mapping: SDK group -> corresponding Appodeal adapter module name
+val sdkGroupToAdapterModule = mapOf(
+    "com.pubmatic.sdk" to "pubmatic",
+    "com.inmobi.monetization" to "inmobi",
+    "net.pubnative" to "hybid",
+    "com.ironsource.sdk" to "ironsource",
+    "com.unity3d.ads" to "unity_ads",
+    "com.vungle" to "vungle",
+    "com.chartboost" to "chartboost",
+    "com.applovin" to "applovin",
+    "com.fyber" to "fyber",
+    "com.amazon.android" to "amazon",
+    "com.mbridge" to "mintegral",
+    "com.pangle" to "pangle",
+    "com.my.target" to "mytarget",
+    "com.yandex.android" to "yandex",
+)
+
+val ciExcludes = (findProperty("excludeAdGroups") as? String)
     ?.split(",")
     ?.map { it.trim() }
     ?.filter { it.isNotEmpty() }
-    ?: emptyList()
+    ?.toSet()
+    ?: emptySet()
 
-if (excludeAdGroups.isNotEmpty()) {
-    println("Excluding unavailable ad mediation groups: $excludeAdGroups")
+val adSdkProbe = configurations.detachedConfiguration(
+    dependencies.create("com.appodeal.ads:sdk:3.12.0.1")
+)
+val unresolvedAdGroups = adSdkProbe.resolvedConfiguration
+    .lenientConfiguration
+    .unresolvedModuleDependencies
+    .map { it.selector.group }
+    .filter { !isCoreGroup(it) }
+    .toSet()
+
+val adapterExcludes = unresolvedAdGroups
+    .mapNotNull { sdkGroupToAdapterModule[it] }
+    .map { "com.appodeal.ads.sdk.networks" to it }
+
+val ciAdapterExcludes = ciExcludes
+    .mapNotNull { sdkGroupToAdapterModule[it] }
+    .map { "com.appodeal.ads.sdk.networks" to it }
+
+val allGroupExcludes = ciExcludes + unresolvedAdGroups
+val allModuleExcludes = adapterExcludes + ciAdapterExcludes
+
+if (allGroupExcludes.isNotEmpty() || allModuleExcludes.isNotEmpty()) {
+    println("Excluding unavailable ad mediation SDK groups: $allGroupExcludes")
+    println("Excluding corresponding adapter modules: ${allModuleExcludes.map { it.second }}")
     configurations.configureEach {
-        excludeAdGroups.forEach { group ->
+        allGroupExcludes.forEach { group ->
             exclude(group = group)
+        }
+        allModuleExcludes.forEach { (group, module) ->
+            exclude(group = group, module = module)
         }
     }
 }
