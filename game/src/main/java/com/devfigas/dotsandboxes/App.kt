@@ -6,13 +6,14 @@ import android.os.Process
 import com.devfigas.mockpvp.PvpGameFactoryRegistry
 import com.devfigas.mockpvp.analytics.AnalyticsManager
 import lib.devfigas.P2PKit
+import lib.devfigas.model.domain.entity.Settings
 
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
         if (!isMainProcess()) return
         PvpGameFactoryRegistry.register(DotsAndBoxesGameFactory())
-        P2PKit.init(this)
+        P2PKit.init(this, Settings(cryptographyEnabled = false, gamePackage = BuildConfig.APPLICATION_ID))
         AnalyticsManager.initialize(this)
     }
 
