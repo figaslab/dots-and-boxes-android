@@ -211,7 +211,7 @@ jobs:
         with:
           name: dotsandboxes-release-v${{ github.event.inputs.version_name }}
           path: game/build/outputs/bundle/release/game-release.aab
-          retention-days: 30
+          retention-days: 1
 
       - name: Upload mapping file as artifact
         if: always()
@@ -220,7 +220,7 @@ jobs:
         with:
           name: mapping-file-v${{ github.event.inputs.version_name }}
           path: game/build/outputs/mapping/release/mapping.txt
-          retention-days: 90
+          retention-days: 1
 
       - name: Upload build reports
         if: always()
@@ -231,7 +231,7 @@ jobs:
           path: |
             game/build/outputs/logs/
             game/build/reports/
-          retention-days: 7
+          retention-days: 1
 
       - name: Cleanup keystore
         if: always()
