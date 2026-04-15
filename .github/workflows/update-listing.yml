@@ -1,0 +1,107 @@
+name: Update Store Listing (Dots and Boxes)
+
+on:
+  workflow_dispatch:
+    inputs:
+      language:
+        description: 'Listing language (BCP-47)'
+        required: true
+        default: 'en-US'
+      update_icon:
+        description: 'Replace icon'
+        required: false
+        type: boolean
+        default: true
+      update_feature:
+        description: 'Replace feature graphic'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  update:
+    name: Update store listing graphics
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install google-auth google-api-python-client
+
+      - name: Verify listing assets exist
+        run: |
+          ls -lh store/icon.png store/feature.png
+
+      - name: Upload listing graphics
+        env:
+          PLAY_JSON: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+          PACKAGE_NAME: com.devfigas.dotsandboxes
+          LANGUAGE: ${{ github.event.inputs.language }}
+          UPDATE_ICON: ${{ github.event.inputs.update_icon }}
+          UPDATE_FEATURE: ${{ github.event.inputs.update_feature }}
+          ICON_PATH: store/icon.png
+          FEATURE_PATH: store/feature.png
+        run: |
+          python3 << 'PYEOF'
+          import json, os
+          from google.oauth2 import service_account
+          from googleapiclient.discovery import build
+          from googleapiclient.http import MediaFileUpload
+
+          creds_json = json.loads(os.environ['PLAY_JSON'])
+          creds = service_account.Credentials.from_service_account_info(
+              creds_json, scopes=['https://www.googleapis.com/auth/androidpublisher']
+          )
+          service = build('androidpublisher', 'v3', credentials=creds)
+
+          pkg = os.environ['PACKAGE_NAME']
+          language = os.environ['LANGUAGE']
+          update_icon = os.environ['UPDATE_ICON'] == 'true'
+          update_feature = os.environ['UPDATE_FEATURE'] == 'true'
+
+          if not (update_icon or update_feature):
+              print('Nothing to update (both flags false).')
+              exit(0)
+
+          edit = service.edits().insert(body={}, packageName=pkg).execute()
+          eid = edit['id']
+          print(f"Edit ID: {eid}")
+
+          if update_icon:
+              service.edits().images().deleteall(
+                  packageName=pkg, editId=eid, language=language, imageType='icon'
+              ).execute()
+              service.edits().images().upload(
+                  packageName=pkg, editId=eid, language=language, imageType='icon',
+                  media_body=MediaFileUpload(os.environ['ICON_PATH'], mimetype='image/png')
+              ).execute()
+              print('icon uploaded')
+
+          if update_feature:
+              service.edits().images().deleteall(
+                  packageName=pkg, editId=eid, language=language, imageType='featureGraphic'
+              ).execute()
+              service.edits().images().upload(
+                  packageName=pkg, editId=eid, language=language, imageType='featureGraphic',
+                  media_body=MediaFileUpload(os.environ['FEATURE_PATH'], mimetype='image/png')
+              ).execute()
+              print('featureGraphic uploaded')
+
+          service.edits().commit(
+              packageName=pkg, editId=eid, changesNotSentForReview=False
+          ).execute()
+          print('Store listing sent for review.')
+          PYEOF
+
+      - name: Summary
+        run: |
+          echo "## Store listing update" >> $GITHUB_STEP_SUMMARY
+          echo "- Language: ${{ github.event.inputs.language }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Icon: ${{ github.event.inputs.update_icon }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Feature graphic: ${{ github.event.inputs.update_feature }}" >> $GITHUB_STEP_SUMMARY

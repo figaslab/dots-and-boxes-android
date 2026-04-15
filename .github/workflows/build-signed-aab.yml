@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: read
 
     steps:
       - name: Checkout code
@@ -103,6 +104,15 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Read library versions
+        run: |
+          if [ -f lib-versions.properties ]; then
+            while IFS='=' read -r key value; do
+              [[ "$key" =~ ^#.*$ || -z "$key" ]] && continue
+              echo "${key}=${value}" >> $GITHUB_ENV
+            done < lib-versions.properties
+          fi
+
       - name: Build Release AAB
         env:
           KEYSTORE_FILE: dotsandboxes-upload-key.jks
@@ -110,7 +120,10 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           GRADLE_OPTS: -Xmx8g -XX:MaxMetaspaceSize=1024m -XX:+HeapDumpOnOutOfMemoryError
+          GITHUB_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
         run: |
+          PREBUILT_FLAGS="-PusePrebuiltLibs=true -Pp2pkitVersion=${{ env.p2pkitVersion }} -PgridgameVersion=${{ env.gridgameVersion }} -PuikitVersion=${{ env.uikitVersion }} -PmockpvpVersion=${{ env.mockpvpVersion }}"
           EXCLUDE=""
           MAX_RETRIES=3
 
@@ -123,7 +136,7 @@ jobs:
             fi
 
             set +e
-            ./gradlew :game:bundleRelease $EXTRA_ARGS --stacktrace --max-workers=1 2>&1 | tee /tmp/build_output.txt
+            ./gradlew :game:bundleRelease $PREBUILT_FLAGS $EXTRA_ARGS --stacktrace --max-workers=1 2>&1 | tee /tmp/build_output.txt
             BUILD_EXIT=${PIPESTATUS[0]}
             set -e
 
@@ -211,7 +224,7 @@ jobs:
         with:
           name: dotsandboxes-release-v${{ github.event.inputs.version_name }}
           path: game/build/outputs/bundle/release/game-release.aab
-          retention-days: 30
+          retention-days: 1
 
       - name: Upload mapping file as artifact
         if: always()
@@ -220,7 +233,7 @@ jobs:
         with:
           name: mapping-file-v${{ github.event.inputs.version_name }}
           path: game/build/outputs/mapping/release/mapping.txt
-          retention-days: 90
+          retention-days: 1
 
       - name: Upload build reports
         if: always()
@@ -231,7 +244,7 @@ jobs:
           path: |
             game/build/outputs/logs/
             game/build/reports/
-          retention-days: 7
+          retention-days: 1
 
       - name: Cleanup keystore
         if: always()
