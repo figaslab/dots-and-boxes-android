@@ -59,6 +59,14 @@ data class DotsAndBoxesGameState(
         return currentPlayerTimeRemainingMs() <= 0
     }
 
+    fun remainingTurnTime(): Long {
+        if (!timerActive) return turnTimeoutMs
+        val elapsed = System.currentTimeMillis() - turnStartTime
+        return maxOf(0, turnTimeoutMs - elapsed)
+    }
+
+    fun isTurnExpired(): Boolean = timerActive && remainingTurnTime() <= 0
+
     fun getRedScore(): Int = board.countBoxes(PlayerColor.RED)
 
     fun getBlueScore(): Int = board.countBoxes(PlayerColor.BLUE)
@@ -70,7 +78,7 @@ data class DotsAndBoxesGameState(
         if (myColor == PlayerColor.RED) getBlueScore() else getRedScore()
 
     companion object {
-        const val TURN_TIMEOUT_MS = 30_000L
+        const val TURN_TIMEOUT_MS = 15_000L
         const val DEFAULT_INITIAL_TIME_MS = 10 * 60 * 1000L
         const val DEFAULT_INCREMENT_MS = 0L
 

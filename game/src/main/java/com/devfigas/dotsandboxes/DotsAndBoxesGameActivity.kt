@@ -1,10 +1,15 @@
 package com.devfigas.dotsandboxes
 
+import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import android.view.View
+import androidx.core.content.ContextCompat
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -98,6 +103,11 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
     // Timer
     private val timerHandler = Handler(Looper.getMainLooper())
     private var timerRunnable: Runnable? = null
+    private var lastVibratedSecond: Int = -1
+
+    private val usesPerTurnTimer: Boolean
+        get() = tournament == null && (gameMode == GameMode.CPU || gameMode == GameMode.INTERNET ||
+                gameMode == GameMode.BLUETOOTH || gameMode == GameMode.WIFI)
 
     // Chat bubble
     private val chatHandler = Handler(Looper.getMainLooper())
@@ -127,6 +137,10 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
 
         showVersusAnimation {
             startGame()
+            if (usesPerTurnTimer) {
+                (gameManager as? com.devfigas.dotsandboxes.game.manager.LocalGameManager)?.activateTimer()
+                startPerTurnTimerUI()
+            }
         }
     }
 
@@ -216,9 +230,9 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
     }
 
     private fun setupTimerVisibility() {
-        val showTimers = tournament != null
-        opponentTimerContainer.visibility = if (showTimers) View.VISIBLE else View.GONE
-        myTimerContainer.visibility = if (showTimers) View.VISIBLE else View.GONE
+        val showChessClock = tournament != null
+        opponentTimerContainer.visibility = if (showChessClock) View.VISIBLE else View.GONE
+        myTimerContainer.visibility = if (showChessClock || usesPerTurnTimer) View.VISIBLE else View.GONE
     }
 
     private fun showVersusAnimation(onComplete: () -> Unit) {
@@ -506,6 +520,7 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
     // ==================== TIMER ====================
 
     private fun updateTimers(state: DotsAndBoxesGameState) {
+        if (usesPerTurnTimer) return  // handled by startPerTurnTimerUI()
         if (state.isUnlimitedTime || !state.timerActive) {
             opponentTimerContainer.visibility = View.GONE
             myTimerContainer.visibility = View.GONE
@@ -575,6 +590,72 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
         val minutes = totalSeconds / 60
         val seconds = totalSeconds % 60
         return String.format("%02d:%02d", minutes, seconds)
+    }
+
+    private fun startPerTurnTimerUI() {
+        stopTimer()
+        lastVibratedSecond = -1
+        opponentTimerContainer.visibility = View.GONE
+        myTimerContainer.visibility = View.VISIBLE
+
+        timerRunnable = object : Runnable {
+            override fun run() {
+                if (isActivityDestroyed) return
+                val state = gameManager?.getState() ?: return
+                if (state.phase != DotsAndBoxesGamePhase.PLAYING) {
+                    myTimerContainer.visibility = View.GONE
+                    return
+                }
+                if (!state.timerActive || !state.isMyTurn()) {
+                    myTimerContainer.visibility = View.GONE
+                    timerHandler.postDelayed(this, 500)
+                    return
+                }
+                myTimerContainer.visibility = View.VISIBLE
+                val remainingMs = state.remainingTurnTime()
+                tvMyTimer.text = formatTime(remainingMs)
+
+                val seconds = (remainingMs / 1000).toInt()
+                val bg = tvMyTimer.background as? GradientDrawable ?: GradientDrawable().also {
+                    it.cornerRadius = 8 * resources.displayMetrics.density
+                }
+                when {
+                    seconds < 5 -> {
+                        bg.setColor(ContextCompat.getColor(this@DotsAndBoxesGameActivity, R.color.timer_critical))
+                        tvMyTimer.background = bg
+                        if (seconds != lastVibratedSecond && seconds > 0) {
+                            lastVibratedSecond = seconds
+                            vibrate(100)
+                        }
+                    }
+                    seconds < 10 -> {
+                        bg.setColor(ContextCompat.getColor(this@DotsAndBoxesGameActivity, R.color.timer_warning))
+                        tvMyTimer.background = bg
+                    }
+                    else -> {
+                        bg.setColor(ContextCompat.getColor(this@DotsAndBoxesGameActivity, R.color.timer_normal))
+                        tvMyTimer.background = bg
+                    }
+                }
+
+                if (remainingMs > 0) {
+                    timerHandler.postDelayed(this, 500)
+                } else {
+                    (gameManager as? com.devfigas.dotsandboxes.game.manager.LocalGameManager)?.checkAndHandleTimeout()
+                }
+            }
+        }
+        timerHandler.post(timerRunnable!!)
+    }
+
+    @Suppress("DEPRECATION")
+    private fun vibrate(millis: Long) {
+        val vibrator = getSystemService(VIBRATOR_SERVICE) as? Vibrator ?: return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(millis, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            vibrator.vibrate(millis)
+        }
     }
 
     // ==================== USER INTERACTION ====================
@@ -739,7 +820,13 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
         }
 
         isRematch = true
-        showVersusAnimation { startGame() }
+        showVersusAnimation {
+            startGame()
+            if (usesPerTurnTimer) {
+                (gameManager as? com.devfigas.dotsandboxes.game.manager.LocalGameManager)?.activateTimer()
+                startPerTurnTimerUI()
+            }
+        }
     }
 
     private fun handleExit() {
