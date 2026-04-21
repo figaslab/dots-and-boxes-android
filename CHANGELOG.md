@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2.0] - 2026-04-21
+## [1.2.0] - 2026-04-21 (build 26042101)
 
 ### Changed
 - Local and CI builds now resolve submodule dependencies from the same source (GitHub Packages); lib-versions.properties is the single source of truth
