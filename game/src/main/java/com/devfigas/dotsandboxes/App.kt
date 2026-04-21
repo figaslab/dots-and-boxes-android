@@ -15,8 +15,8 @@ class App : Application() {
         if (!isMainProcess()) return
         PvpGameFactoryRegistry.register(DotsAndBoxesGameFactory())
         P2PKit.init(this, Settings(cryptographyEnabled = false, gamePackage = BuildConfig.APPLICATION_ID))
-        AnalyticsManager.applyConsentForAge(AgeManager.getAgeCategory(this))
         AnalyticsManager.initialize(this)
+        AnalyticsManager.applyConsentForAge(AgeManager.getAgeCategory(this))
     }
 
     private fun isMainProcess(): Boolean {
