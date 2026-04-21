@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.1] - 2026-04-21 (build 26042102)
+
+### Fixed
+- Nickname field text on login was unreadable — it was painted the same color as the field background. Restored dark text color for proper contrast across device themes. (mockpvp 1.2.1)
+
 ## [1.2.0] - 2026-04-21 (build 26042101)
 
 ### Changed
