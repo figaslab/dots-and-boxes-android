@@ -113,17 +113,12 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
 
-    if ((findProperty("usePrebuiltLibs") as? String)?.toBoolean() == true) {
-        implementation("com.devfigas:p2pkit:${findProperty("p2pkitVersion")}")
-        implementation("com.devfigas:uikit:${findProperty("uikitVersion")}")
-        implementation("com.devfigas:gridgame:${findProperty("gridgameVersion")}")
-        implementation("com.devfigas:mockpvp:${findProperty("mockpvpVersion")}")
-    } else {
-        implementation(project(":p2pkit"))
-        implementation(project(":uikit"))
-        implementation(project(":gridgame"))
-        implementation(project(":mockpvp"))
-    }
+    // Single resolution path - local and CI both resolve these via GitHub Packages
+    // (see settings.gradle.kts). Versions come from lib-versions.properties.
+    implementation("com.devfigas:p2pkit:${findProperty("p2pkitVersion")}")
+    implementation("com.devfigas:uikit:${findProperty("uikitVersion")}")
+    implementation("com.devfigas:gridgame:${findProperty("gridgameVersion")}")
+    implementation("com.devfigas:mockpvp:${findProperty("mockpvpVersion")}")
 
     val emoji2Version = "1.4.0"
     implementation("androidx.emoji2:emoji2:$emoji2Version")
