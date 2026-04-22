@@ -98,6 +98,45 @@ class DotsAndBoxesBoardView @JvmOverloads constructor(
         textAlign = Paint.Align.CENTER
     }
 
+    /**
+     * Returns a rect in window coordinates for the given line (so the tutorial
+     * overlay can highlight it). Returns null if layout isn't ready or the
+     * line is out of range.
+     */
+    fun getLineRectInWindow(line: DotsAndBoxesLine): android.graphics.RectF? {
+        val b = board ?: return null
+        if (cellSize <= 0f) return null
+        val padding = cellSize * 0.15f
+        val loc = IntArray(2)
+        getLocationInWindow(loc)
+        return when (line.orientation) {
+            LineOrientation.HORIZONTAL -> {
+                if (line.row !in 0 until b.dotRows || line.col !in 0 until b.dotCols - 1) return null
+                val sx = boardOffsetX + line.col * cellSize
+                val ex = boardOffsetX + (line.col + 1) * cellSize
+                val y = boardOffsetY + line.row * cellSize
+                android.graphics.RectF(
+                    loc[0] + sx,
+                    loc[1] + y - padding,
+                    loc[0] + ex,
+                    loc[1] + y + padding
+                )
+            }
+            LineOrientation.VERTICAL -> {
+                if (line.row !in 0 until b.dotRows - 1 || line.col !in 0 until b.dotCols) return null
+                val x = boardOffsetX + line.col * cellSize
+                val sy = boardOffsetY + line.row * cellSize
+                val ey = boardOffsetY + (line.row + 1) * cellSize
+                android.graphics.RectF(
+                    loc[0] + x - padding,
+                    loc[1] + sy,
+                    loc[0] + x + padding,
+                    loc[1] + ey
+                )
+            }
+        }
+    }
+
     fun setOnLineSelectedListener(listener: (DotsAndBoxesLine) -> Unit) {
         onLineSelected = listener
     }

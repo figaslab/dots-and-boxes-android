@@ -50,6 +50,11 @@ import com.devfigas.mockpvp.ui.ResignDialog
 import com.devfigas.mockpvp.ui.VersusDialog
 import com.devfigas.mockpvp.ui.WaitingRematchDialog
 import ui.devfigas.uikit.customviews.RightDialogLayout
+import ui.devfigas.uikit.tutorial.TutorialOverlayView
+import com.devfigas.dotsandboxes.tutorial.ScriptedDotsAndBoxesAI
+import com.devfigas.dotsandboxes.tutorial.TutorialDirector
+import com.devfigas.dotsandboxes.tutorial.TutorialPreferences
+import android.content.Intent
 import kotlin.random.Random
 
 class DotsAndBoxesGameActivity : AppCompatActivity() {
@@ -59,7 +64,13 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
         const val EXTRA_MY_COLOR = "extra_my_color"
         const val EXTRA_OPPONENT = "extra_opponent"
         const val EXTRA_GAME_ID = "extra_game_id"
+        const val EXTRA_TUTORIAL_MODE = "extra_tutorial_mode"
     }
+
+    // Tutorial state
+    private var tutorialMode: Boolean = false
+    private var tutorialDirector: TutorialDirector? = null
+    private var tutorialOverlay: TutorialOverlayView? = null
 
     // Views
     private lateinit var btnBack: ImageView
@@ -107,7 +118,7 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
     private var lastVibratedSecond: Int = -1
 
     private val usesPerTurnTimer: Boolean
-        get() = tournament == null && (gameMode == GameMode.CPU || gameMode == GameMode.INTERNET ||
+        get() = !tutorialMode && tournament == null && (gameMode == GameMode.CPU || gameMode == GameMode.INTERNET ||
                 gameMode == GameMode.BLUETOOTH || gameMode == GameMode.WIFI)
 
     // Chat bubble
@@ -136,18 +147,46 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
 
         AnalyticsManager.logScreenView("DotsAndBoxesGame")
 
-        showVersusAnimation {
+        if (tutorialMode) {
             startGame()
-            if (usesPerTurnTimer) {
-                (gameManager as? com.devfigas.dotsandboxes.game.manager.LocalGameManager)?.activateTimer()
-                startPerTurnTimerUI()
+            startTutorial()
+        } else {
+            showVersusAnimation {
+                startGame()
+                if (usesPerTurnTimer) {
+                    (gameManager as? com.devfigas.dotsandboxes.game.manager.LocalGameManager)?.activateTimer()
+                    startPerTurnTimerUI()
+                }
             }
         }
     }
 
+    private fun startTutorial() {
+        val overlay = tutorialOverlay ?: return
+        overlay.visibility = View.VISIBLE
+        val tutorUser = currentUser
+        tutorialDirector = TutorialDirector(
+            activity = this,
+            overlay = overlay,
+            boardView = boardView,
+            playLine = { line -> gameManager?.selectLine(line) },
+            onFinished = {
+                val next = Intent(this, GameModeActivity::class.java).apply {
+                    putExtra(MainActivity.EXTRA_USER, tutorUser)
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                }
+                startActivity(next)
+                finish()
+            }
+        ).also { it.start() }
+    }
+
     private fun parseIntentExtras() {
+        tutorialMode = intent.getBooleanExtra(EXTRA_TUTORIAL_MODE, false)
+
         val gameModeStr = intent.getStringExtra(GameModeActivity.EXTRA_GAME_MODE)
-        gameMode = if (gameModeStr != null) {
+        gameMode = if (tutorialMode) GameMode.CPU
+        else if (gameModeStr != null) {
             try { GameMode.valueOf(gameModeStr) } catch (e: Exception) { GameMode.CPU }
         } else GameMode.CPU
 
@@ -157,17 +196,22 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
         opponent = intent.getParcelableExtra(EXTRA_OPPONENT)
         gameId = intent.getStringExtra(EXTRA_GAME_ID)
 
-        val myColorStr = intent.getStringExtra(EXTRA_MY_COLOR)
-        myColor = if (myColorStr != null) {
-            try { PlayerColor.valueOf(myColorStr) } catch (e: Exception) { randomColor() }
-        } else randomColor()
+        myColor = if (tutorialMode) PlayerColor.RED
+        else {
+            val myColorStr = intent.getStringExtra(EXTRA_MY_COLOR)
+            if (myColorStr != null) {
+                try { PlayerColor.valueOf(myColorStr) } catch (e: Exception) { randomColor() }
+            } else randomColor()
+        }
 
-        tournament = intent.getParcelableExtra(TournamentSelectionActivity.EXTRA_TOURNAMENT)
+        tournament = if (tutorialMode) null
+            else intent.getParcelableExtra(TournamentSelectionActivity.EXTRA_TOURNAMENT)
 
         if (opponent == null) {
-            opponent = when (gameMode) {
-                GameMode.CPU -> User(name = "CPU", avatar = EmojiManager.DEFAULT_AVATAR_ID)
-                GameMode.LOCAL -> User(name = "Player 2", avatar = EmojiManager.DEFAULT_AVATAR_ID)
+            opponent = when {
+                tutorialMode -> User(name = getString(R.string.tutorial_opponent_name), avatar = EmojiManager.DEFAULT_AVATAR_ID)
+                gameMode == GameMode.CPU -> User(name = "CPU", avatar = EmojiManager.DEFAULT_AVATAR_ID)
+                gameMode == GameMode.LOCAL -> User(name = "Player 2", avatar = EmojiManager.DEFAULT_AVATAR_ID)
                 else -> User(name = "Opponent", avatar = EmojiManager.DEFAULT_AVATAR_ID)
             }
         }
@@ -197,11 +241,20 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
         chatBubble = findViewById(R.id.chat_bubble)
         tvChatMessage = findViewById(R.id.tv_chat_message)
         snackbarContainer = findViewById(R.id.snackbar_container)
+        tutorialOverlay = findViewById(R.id.tutorial_overlay)
     }
 
     private fun setupListeners() {
         btnBack.setOnClickListener { onBackButtonPressed() }
-        btnResign.setOnClickListener { showResignDialog() }
+        btnResign.setOnClickListener {
+            if (tutorialMode) {
+                tutorialDirector?.onSkipRequested()
+                TutorialPreferences.markCompleted(this)
+                finish()
+            } else {
+                showResignDialog()
+            }
+        }
         btnChat.setOnClickListener { toggleChatBar() }
         btnSendChat.setOnClickListener { sendChatMessage() }
 
@@ -213,6 +266,10 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
         }
 
         boardView.setOnLineSelectedListener { line ->
+            if (tutorialMode) {
+                val allowed = tutorialDirector?.allowedLines()
+                if (allowed != null && line !in allowed) return@setOnLineSelectedListener
+            }
             selectLine(line)
         }
     }
@@ -292,7 +349,10 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
     }
 
     private fun createCpuGameManager(): DotsAndBoxesGameManager {
-        val ai = DotsAndBoxesAIEngine(level = 0)
+        val ai: com.devfigas.dotsandboxes.game.ai.DotsAndBoxesAI = if (tutorialMode)
+            ScriptedDotsAndBoxesAI(TutorialDirector.AI_SCRIPT)
+        else
+            DotsAndBoxesAIEngine(level = 0)
         val cpuColor = myColor
         val cpuOpponent = opponent
         val manager = object : DotsAndBoxesGameManager(
@@ -486,10 +546,14 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
 
         if (state.phase == DotsAndBoxesGamePhase.GAME_OVER && !hasShownGameOver) {
             hasShownGameOver = true
-            showGameOverDialog(state)
+            if (!tutorialMode) showGameOverDialog(state)
         }
         if (state.phase == DotsAndBoxesGamePhase.WAITING_REMATCH) {
             showWaitingRematchDialog()
+        }
+
+        if (tutorialMode) {
+            tutorialDirector?.onGameStateChanged(state)
         }
     }
 
@@ -864,6 +928,7 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
     override fun onBackPressed() { onBackButtonPressed() }
 
     private fun setupBannerAd() {
+        if (tutorialMode) return
         adDisclosureLabel.visibility = View.GONE
         if (tournament == null) {
             AdManager.showBanner(
