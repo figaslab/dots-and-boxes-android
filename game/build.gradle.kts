@@ -16,8 +16,8 @@ android {
         applicationId = "com.devfigas.dotsandboxes"
         minSdk = 23
         targetSdk = 35
-        versionCode = 26042102
-        versionName = "1.2.1"
+        versionCode = 26042401
+        versionName = "1.2.2"
 
         testApplicationId = "com.devfigas.dotsandboxes.test"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

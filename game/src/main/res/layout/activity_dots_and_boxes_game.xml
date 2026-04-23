@@ -321,4 +321,29 @@
         android:layout_gravity="top"
         android:layout_marginTop="108dp" />
 
+    <!-- Ad disclosure wrapper -->
+    <FrameLayout
+        android:id="@+id/ad_disclosure_label"
+        android:layout_width="360dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:paddingHorizontal="3dp"
+            android:text="@string/ad_disclosure_label"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:shadowColor="#000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2" />
+
+    </FrameLayout>
+
 </FrameLayout>
