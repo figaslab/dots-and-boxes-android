@@ -27,7 +27,7 @@ class DotsAndBoxesGameFactory : PvpGameFactory {
     override fun getVersionName(): String = BuildConfig.VERSION_NAME
     override fun getDebugOpponentSideSetting(context: Context): String = "RANDOM"
     override fun getDebugInitialState(context: Context): String? = null
-    override fun setupDebugButton(activity: Activity) { }
+    override fun setupDebugButton(activity: Activity) { DebugFeatures.setupDebugButton(activity) }
     override fun getExtraMyColorKey(): String = DotsAndBoxesGameActivity.EXTRA_MY_COLOR
     override fun getExtraOpponentKey(): String = DotsAndBoxesGameActivity.EXTRA_OPPONENT
     override fun getExtraGameIdKey(): String = DotsAndBoxesGameActivity.EXTRA_GAME_ID
