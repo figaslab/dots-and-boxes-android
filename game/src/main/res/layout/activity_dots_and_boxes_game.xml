@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
+    android:keepScreenOn="true"
     tools:context=".DotsAndBoxesGameActivity">
 
 <LinearLayout
@@ -345,5 +346,12 @@
             android:shadowRadius="2" />
 
     </FrameLayout>
+
+    <!-- Tutorial Overlay (shown only when extra_tutorial_mode=true) -->
+    <ui.devfigas.uikit.tutorial.TutorialOverlayView
+        android:id="@+id/tutorial_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
 </FrameLayout>
