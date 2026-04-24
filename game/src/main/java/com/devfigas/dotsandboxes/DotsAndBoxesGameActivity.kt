@@ -76,6 +76,7 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
     private lateinit var myTimerContainer: View
     private lateinit var tvMyTimer: TextView
     private lateinit var bannerContainer: View
+    private lateinit var adDisclosureLabel: View
     private lateinit var chatBar: View
     private lateinit var etChatMessage: EditText
     private lateinit var btnSendChat: TextView
@@ -189,6 +190,7 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
         myTimerContainer = findViewById(R.id.my_timer_container)
         tvMyTimer = findViewById(R.id.tv_my_timer)
         bannerContainer = findViewById(R.id.banner_container)
+        adDisclosureLabel = findViewById(R.id.ad_disclosure_label)
         chatBar = findViewById(R.id.chat_bar)
         etChatMessage = findViewById(R.id.et_chat_message)
         btnSendChat = findViewById(R.id.btn_send_chat)
@@ -862,7 +864,15 @@ class DotsAndBoxesGameActivity : AppCompatActivity() {
     override fun onBackPressed() { onBackButtonPressed() }
 
     private fun setupBannerAd() {
-        if (tournament == null) AdManager.showBanner(this, bannerContainer as ViewGroup)
+        adDisclosureLabel.visibility = View.GONE
+        if (tournament == null) {
+            AdManager.showBanner(
+                this,
+                bannerContainer as ViewGroup,
+                onShown = { adDisclosureLabel.visibility = View.VISIBLE },
+                onFailed = { adDisclosureLabel.visibility = View.GONE }
+            )
+        }
     }
 
     override fun onResume() { super.onResume(); setupBannerAd() }
