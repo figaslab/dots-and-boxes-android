@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.3.0] - 2026-04-24 (build 26042401)
+
+### Added
+- First-launch tutorial: deterministic 6-step flow that guides the player through drawing three sides of a box and closing it to earn the extra turn. The Tutor bot plays a scripted helpful move to set up the box.
+- "Ad" disclosure overlay anchored to the left of the in-game banner.
+
+### Changed
+- Rewarded ad buttons show "Ad" prefix + reward amount (Google Play
+  Families Ad Format Requirements) (mockpvp 1.3.0).
+- Bumped submodule versions: mockpvp 1.2.1 → 1.3.0, uikit 1.0.0 → 1.2.0.
+- Added "View Tutorial" entry to debug menu for quicker tutorial testing.
+
+### Fixed
+- Date-of-birth bottom sheet opens fully expanded in landscape
+  (mockpvp 1.3.0).
+- Tutorial softlock: AI script length now matches the player move count, so the flow reliably reaches the box-closing congratulations step.
+
 ## [1.2.1] - 2026-04-21 (build 26042102)
 
 ### Fixed
