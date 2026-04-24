@@ -9,6 +9,7 @@
     <string name="tutorial_welcome">Bem-vindo ao Dots and Boxes! Vou te ensinar a riscar linhas rapidinho.</string>
     <string name="tutorial_objective">Objetivo: fechar quadrados desenhando o 4o lado. Ao fechar, voce reivindica e ganha turno extra.</string>
     <string name="tutorial_first_move">Toque na linha destacada para risca-la.</string>
-    <string name="tutorial_second_move">Agora risque uma linha vizinha para comecar a formar um quadrado.</string>
-    <string name="tutorial_congrats">Voce entendeu. Jogue uma partida completa — cuidado com linhas que dao o 4o lado de graca pro oponente!</string>
+    <string name="tutorial_second_move">Boa! O Tutor esta te ajudando. Risque a linha destacada pra somar mais um lado.</string>
+    <string name="tutorial_close_box">So falta um lado! Risque ele pra conquistar o quadrado e ganhar turno extra.</string>
+    <string name="tutorial_congrats">Voce fechou seu primeiro quadrado! Jogue uma partida completa — cuidado com linhas que dao o 4o lado de graca pro oponente.</string>
 </resources>

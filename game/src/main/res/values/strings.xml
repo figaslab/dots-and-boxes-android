@@ -39,6 +39,7 @@
     <string name="tutorial_welcome">Welcome to Dots and Boxes! I\'ll get you drawing lines in a moment.</string>
     <string name="tutorial_objective">Goal: close boxes by drawing the 4th side. Close one, claim it, and get an extra turn.</string>
     <string name="tutorial_first_move">Tap the highlighted line to draw it.</string>
-    <string name="tutorial_second_move">Now draw an adjacent line to start building toward a box.</string>
-    <string name="tutorial_congrats">You\'ve got it. Play a full match — careful with lines that give the opponent a free 4th side!</string>
+    <string name="tutorial_second_move">Nice! The Tutor is helping you. Draw the highlighted line to add another side.</string>
+    <string name="tutorial_close_box">Only one side left! Draw it to claim the box and earn an extra turn.</string>
+    <string name="tutorial_congrats">You closed your first box! Play a full match — careful with lines that give the opponent a free 4th side.</string>
 </resources>

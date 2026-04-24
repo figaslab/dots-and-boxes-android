@@ -23,11 +23,13 @@ class TutorialDirector(
 ) {
     companion object {
         val AI_SCRIPT: List<DotsAndBoxesLine> = listOf(
+            DotsAndBoxesLine(LineOrientation.HORIZONTAL, 1, 0),
             DotsAndBoxesLine(LineOrientation.HORIZONTAL, 4, 3)
         )
         val PLAYER_ALLOWED_LINES: List<DotsAndBoxesLine> = listOf(
             DotsAndBoxesLine(LineOrientation.HORIZONTAL, 0, 0),
-            DotsAndBoxesLine(LineOrientation.VERTICAL, 0, 0)
+            DotsAndBoxesLine(LineOrientation.VERTICAL, 0, 0),
+            DotsAndBoxesLine(LineOrientation.VERTICAL, 0, 1)
         )
     }
 
@@ -48,6 +50,8 @@ class TutorialDirector(
             targetLine = PLAYER_ALLOWED_LINES[0], balloonSide = TutorialOverlayView.BalloonSide.BOTTOM),
         Step(R.string.tutorial_second_move, R.string.tutorial_next, Advance.MOVE,
             targetLine = PLAYER_ALLOWED_LINES[1], balloonSide = TutorialOverlayView.BalloonSide.BOTTOM),
+        Step(R.string.tutorial_close_box, R.string.tutorial_next, Advance.MOVE,
+            targetLine = PLAYER_ALLOWED_LINES[2], balloonSide = TutorialOverlayView.BalloonSide.BOTTOM),
         Step(R.string.tutorial_congrats, R.string.tutorial_play, Advance.BUTTON)
     )
 
