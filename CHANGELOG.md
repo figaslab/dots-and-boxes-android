@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.0] - 2026-04-27 (build 26042701)
+
+### Added
+- `-PuseLocalSubmodules` flag for sibling-source iteration on submodule changes.
+
+### Fixed
+- Per-turn timer now also active in tournament mode.
+
+### Changed
+- Removed in-tree submodule copies; submodules consumed from GitHub Packages (uikit 1.7.0, mockpvp 1.4.0, gridgame 1.0.0, p2pkit 1.1.0).
+
 ## [1.3.0] - 2026-04-24 (build 26042401)
 
 ### Added
