@@ -8,9 +8,7 @@ pluginManagement {
 
 // Single source of truth: lib-versions.properties declares which version of
 // each submodule Gradle resolves from GitHub Packages. Loaded here so both
-// local builds and CI see the same versions via findProperty(...). Submodule
-// checkouts under p2pkit/ uikit/ gridgame/ mockpvp/ exist only for source
-// navigation; Gradle does not consume them as projects.
+// local builds and CI see the same versions via findProperty(...).
 val libVersions = java.util.Properties().apply {
     file("lib-versions.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
 }
@@ -46,3 +44,21 @@ dependencyResolutionManagement {
 
 rootProject.name = "dots-and-boxes"
 include(":game")
+
+// -PuseLocalSubmodules=true (or USE_LOCAL_SUBMODULES=true env var) wires
+// Gradle to the sibling source checkouts under the workspace root instead
+// of resolving the published .aar from GitHub Packages. Use only when
+// iterating on a submodule change before publishing a new version.
+val useLocalSubmodules = (System.getenv("USE_LOCAL_SUBMODULES")
+    ?: startParameter.projectProperties["useLocalSubmodules"]
+    ?: "false").toBoolean()
+if (useLocalSubmodules) {
+    val workspaceRoot = rootProject.projectDir.parentFile
+    listOf("p2pkit-android", "gridgame-android", "uikit-android", "mockpvp-android").forEach { name ->
+        val dir = java.io.File(workspaceRoot, name)
+        if (dir.isDirectory) {
+            logger.lifecycle("[useLocalSubmodules] includeBuild($name)")
+            includeBuild(dir)
+        }
+    }
+}
